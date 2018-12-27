@@ -89,8 +89,9 @@ function rel_next_prevlink_tags() {
   //1ページを複数に分けた分割ページ
   if(is_single() || is_page()) {
     global $wp_query;
-    $multipage = check_multi_page();
-    if($multipage[0] > 1) {
+    global $multipage;
+    //$multipage = check_multi_page();
+    if($multipage) {
       $prev = generate_multipage_url('prev');
       $next = generate_multipage_url('next');
       if($prev) {
@@ -121,11 +122,14 @@ if ( is_rel_next_prev_link_enable() ) {
 //http://seophp.net/wordpress-fix-rel-prev-and-rel-next-without-plugin/
 function generate_multipage_url($rel='prev') {
   global $post;
+  global $multipage;
+  global $page;
+  global $numpages;
   $url = '';
-  $multipage = check_multi_page();
-  if($multipage[0] > 1) {
-    $numpages = $multipage[0];
-    $page = $multipage[1] == 0 ? 1 : $multipage[1];
+  //$multipage = check_multi_page();
+  if($multipage) {
+    //$numpages = $multipage[0];
+    //$page = $multipage[1] == 0 ? 1 : $multipage[1];
     $i = 'prev' == $rel? $page - 1: $page + 1;
     if($i && $i > 0 && $i <= $numpages) {
       if(1 == $i) {
@@ -156,6 +160,7 @@ function check_multi_page() {
 //remove_action('wp_head', 'rel_canonical');
 
 //canonical URLの生成
+if ( !function_exists( 'generate_canonical_url' ) ):
 function generate_canonical_url(){
   global $paged;
   global $page;
@@ -185,15 +190,18 @@ function generate_canonical_url(){
   return $canonical_url;
 
 }
+endif;
 
 //canonicalタグの取得
 //取得条件；http://bazubu.com/seo101/how-to-use-canonical
+if ( !function_exists( 'canonical_tag' ) ):
 function canonical_tag(){
   $canonical_url = generate_canonical_url();
   if ( $canonical_url ) {
     echo '<link rel="canonical" href="'.$canonical_url.'">'.PHP_EOL;
   }
 }
+endif;
 
 if ( !function_exists( 'is_noindex_page' ) ):
 function is_noindex_page(){

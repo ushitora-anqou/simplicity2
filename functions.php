@@ -157,8 +157,12 @@ add_filter('excerpt_more', 'custom_excerpt_more');
 if ( !function_exists( 'get_the_custom_excerpt' ) ):
 function get_the_custom_excerpt($content, $length = 70, $is_card = false) {
   global $post;
+  //「抜粋」を取得
+  $description = $post->post_excerpt;
   //SEO設定のディスクリプション取得
-  $description = get_meta_description_blogcard_snippet($post->ID);
+  if (!$description) {
+    $description = get_meta_description_blogcard_snippet($post->ID);
+  }
   //SEO設定のディスクリプションがない場合は「All in One SEO Packの値」を取得
   if (!$description) {
     if (class_exists( 'All_in_One_SEO_Pack' )) {
@@ -167,10 +171,6 @@ function get_the_custom_excerpt($content, $length = 70, $is_card = false) {
         $description = $aioseop_description;
       }
     }
-  }
-  //SEO設定のディスクリプションがない場合は「抜粋」を取得
-  if (!$description) {
-    $description = $post->post_excerpt;
   }
   if (is_wordpress_excerpt() && $description ) {//Wordpress固有の抜粋文を使用するとき
     $description = htmlspecialchars($description);
@@ -200,14 +200,54 @@ function get_content_excerpt($content, $length = 70){
 }
 endif;
 
-//外部ファイルのURLに付加されるver=を取り除く
-function vc_remove_wp_ver_css_js( $src ) {
-    if ( strpos( $src, 'ver=' ) )
-        $src = remove_query_arg( 'ver', $src );
-    return $src;
+
+//CSS、JSファイルに編集時間をバージョンとして付加する（ファイル編集後のブラウザキャッシュ対策）
+if ( !function_exists( 'add_file_ver_to_css_js' ) ):
+function add_file_ver_to_css_js( $src ) {
+  //サーバー内のファイルの場合
+  if (includes_site_url($src)) {
+    //Wordpressのバージョンを除去する場合
+    // if ( strpos( $src, 'ver=' ) )
+    //   $src = remove_query_arg( 'ver', $src );
+    //クエリーを削除したファイルURLを取得
+    $removed_src = preg_replace('{\?.*}i', '', $src);
+    //URLをパスに変換
+    $stylesheet_file = url_to_local( $removed_src );
+    if (file_exists($stylesheet_file)) {
+      //ファイルの編集時間バージョンを追加
+      $src = add_query_arg( 'fver', date('Ymdhis', filemtime($stylesheet_file)), $src );
+    }
+  }
+  return $src;
 }
-add_filter( 'style_loader_src', 'vc_remove_wp_ver_css_js', 9999 );
-add_filter( 'script_loader_src', 'vc_remove_wp_ver_css_js', 9999 );
+endif;
+add_filter( 'style_loader_src', 'add_file_ver_to_css_js', 9999 );
+add_filter( 'script_loader_src', 'add_file_ver_to_css_js', 9999 );
+
+
+// //外部ファイルのURLに付加されるver=を取り除く
+// if ( !function_exists( 'add_file_ver_to_css_js' ) ):
+// function add_file_ver_to_css_js( $src ) {
+//   // _v($src);
+//   // _v(site_url());
+//   // _v(strpos( $src, site_url() ));
+//   //サーバー内のファイルの場合
+//   if (strpos( $src, site_url() ) !== false) {
+//     //Wordpressのバージョンを除去する場合
+//     // if ( strpos( $src, 'ver=' ) )
+//     //   $src = remove_query_arg( 'ver', $src );
+//     //クエリーを削除したファイルURLを取得
+//     $removed_src = preg_replace('{\?.+$}i', '', $src);
+//     //URLをパスに変換
+//     $stylesheet_file = str_replace(site_url('/'), ABSPATH, $removed_src );
+//     //ファイルの編集時間バージョンを追加
+//     $src = add_query_arg( 'fver', date('Ymdhis', filemtime($stylesheet_file)), $src );
+//   }
+//   return $src;
+// }
+// endif;
+// add_filter( 'style_loader_src', 'add_file_ver_to_css_js', 9999 );
+// add_filter( 'script_loader_src', 'add_file_ver_to_css_js', 9999 );
 
 //セルフピンバック禁止
 function sp_no_self_ping( &$links ) {
@@ -304,6 +344,15 @@ function get_the_description(){
   //投稿・固定ページにメタディスクリプションが設定してあれば取得
   if (get_meta_description_singular_page()) {
     $desc = get_meta_description_singular_page();
+  }
+  //SEO設定のディスクリプションがない場合は「All in One SEO Packの値」を取得
+  if (!$desc) {
+    if (class_exists( 'All_in_One_SEO_Pack' )) {
+      $aioseop_description = get_post_meta($post->ID, '_aioseop_description', true);
+      if ($aioseop_description) {
+        $desc = $aioseop_description;
+      }
+    }
   }
   if ( !$desc ) {//投稿で抜粋が設定されていない場合は、110文字の冒頭の抽出分
     $desc = strip_shortcodes(get_the_custom_excerpt( $post->post_content, 150 ));
@@ -419,6 +468,7 @@ function skin_files_comp($a, $b) {
 }
 
 //フォルダ以下のファイルをすべて取得
+if ( !function_exists( 'get_file_list' ) ):
 function get_file_list($dir) {
   $list = array();
   $files = scandir($dir);
@@ -434,8 +484,10 @@ function get_file_list($dir) {
   }
   return $list;
 }
+endif;
 
 //スキンとなるファイルの取得
+if ( !function_exists( 'get_skin_files' ) ):
 function get_skin_files(){
   define( 'FS_METHOD', 'direct' );
 
@@ -512,6 +564,7 @@ function get_skin_files(){
 
   return $results;
 }
+endif;
 
 //WP_Queryの引数を取得
 if ( !function_exists( 'get_related_wp_query_args' ) ):
@@ -575,7 +628,7 @@ if ( is_auto_update_enable() ) {//テーマのオートアップデート機能�
   require 'theme-update-checker.php'; //ライブラリのパス
   $example_update_checker = new ThemeUpdateChecker(
     'simplicity2', //テーマフォルダ名
-    'http://wp-simplicity.com/wp-content/themes/simplicity/update-info2.json' //JSONファイルのURL
+    'https://raw.githubusercontent.com/yhira/simplicity2/master/update-info2.json' //JSONファイルのURL
   );
 }
 
@@ -639,6 +692,12 @@ if ( is_alt_hover_effect_enable() ) {
   add_filter('the_content','wrap_images_for_hover',100);
 }
 */
+
+//ブロックエディターの有効化/無効化
+if (!is_admin_block_editor_enable()) {
+  add_filter('gutenberg_can_edit_post_type', '__return_false');
+  add_filter('use_block_editor_for_post', '__return_false');
+}
 
 //Simplicityのビジュアルエディタースタイル
 function simplicity_theme_add_editor_styles() {
@@ -1251,6 +1310,11 @@ function chagne_site_url_html_to_https($the_content){
   $replace = 'https://hbb.afl.rakuten.co.jp';
   $the_content = str_replace($search, $replace, $the_content);
 
+  //リンクシェアのSSL対応
+  $search  = 'http://ad.linksynergy.com';
+  $replace = 'https://ad.linksynergy.com';
+  $the_content = str_replace($search, $replace, $the_content);
+
   //Google検索ボックスのSSL対応
   $search  = 'http://www.google.co.jp/cse';
   $replace = 'https://www.google.co.jp/cse';
@@ -1355,5 +1419,186 @@ function get_archive_chapter_text(){
   $chapter_text .= '</span><span class="archive-title-pa">'.__( '」', 'simplicity2' ).'</span><span class="archive-title-list-text">'.get_theme_text_list().'</span>';
   //返り値として返す
   return $chapter_text;
+}
+endif;
+
+//Gistのembed対応
+wp_embed_register_handler( 'gist', '/https?:\/\/gist\.github\.com\/([a-z0-9]+)\/([a-z0-9]+)(#file=.*)?/i', 'wp_embed_register_handler_for_gist' );
+if ( !function_exists( 'wp_embed_register_handler_for_gist' ) ):
+function wp_embed_register_handler_for_gist( $matches, $attr, $url, $rawattr ) {
+  $embed = sprintf(
+    '<script src="https://gist.github.com/%1$s/%2$s.js"></script>',
+    esc_attr( $matches[1] ),
+    esc_attr( $matches[2] )
+    );
+  return apply_filters( 'embed_gist', $embed, $matches, $attr, $url, $rawattr );
+}
+endif;
+
+//ウィジェット設定エリアの幅を広げる
+add_action('admin_head', 'wide_widget_setting_area');
+if ( !function_exists( 'wide_widget_setting_area' ) ):
+function wide_widget_setting_area(){
+  global $current_screen;
+  if ( $current_screen->id == 'widgets' )
+  {
+  ?>
+	<style type="text/css">
+	.widget.open{
+	  margin-left: -116px;
+	  z-index: 100;
+	}
+
+	#sub-accordion-section-sidebar-widgets-sidebar .widget.open,
+	#wp_inactive_widgets .widget.open{
+	  margin-left: 0;
+	}
+
+	</style>
+  <?php
+  }
+}
+endif;
+
+//Jetpackとの競合対応
+remove_action( 'init', 'wpcom_youtube_embed_crazy_url_init' );
+//YouTube動画表示の高速化
+add_filter('embed_oembed_html', 'youtube_embed_oembed_html', 1, 3);
+if ( !function_exists( 'youtube_embed_oembed_html' ) ):
+function youtube_embed_oembed_html ($cache, $url, $attr) {
+  if (is_amp()) {
+    return $cache;
+  }
+
+  // data-youtubeチェック
+  if (strpos($cache, 'data-youtube')) {
+    preg_match( '/(?<=data-youtube=")(.+?)(?=")/', $cache, $match_cache);
+    $MATCH_CACHE = $match_cache[0];
+  };
+
+  //* YouTubeキャッシュが空のときYouTubeビデオとプレイリストのためにこれらを作成する ( video_id, title, picprefix and etc for schema.org )
+  if (empty($MATCH_CACHE)) {
+
+    // YouTubeキャッシュを無視する
+    if (!strpos($cache, 'youtube')) {
+      return $cache;
+    }
+
+    // curlの存在確認
+    if (!function_exists('curl_version')) {
+      return $cache;
+    }
+
+    // 古いデータの除去
+    $cache = preg_replace('/data-picprefix=\\"(.+?)\\"/s', "", $cache);
+    // プレイリストIDがある場合
+    if( preg_match_all( '/videoseries|list=/i', $cache, $m )){
+      // プレイリストIDの抽出
+      preg_match( '/(?<=list=)(.+?)(?=")/', $cache, $list );
+      // ビデオIDの取得
+      $json = json_decode(file_get_contents('https://www.youtube.com/oembed?url=http://www.youtube.com/playlist?list='.$list[1]), true);
+      // ビデオIDの抽出
+      preg_match( '/(?<=vi\/)(.+?)(?=\/)/', $json['thumbnail_url'], $video_id );
+    } else {
+      preg_match( '/(?<=embed\/)(.+?)(?=\?)/', $cache, $video_id );
+    }
+
+    // もしビデオIDないまだ空ならおそらくYouTubeがオフライン
+    if (!$video_id[0]) {
+      return $cache;
+    }
+
+    $ch = curl_init();
+    $headers = array(
+      'Accept-language: en',
+      'User-Agent: Mozilla/5.0 (iPad; CPU OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari',
+    );
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_URL, "https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=" . $video_id[0] . "&format=json");
+
+    $data = curl_exec($ch);
+
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+
+    if ($info['http_code'] != 200){
+      return $cache;
+    }
+
+    // YouTubeからデータが取得できなかった場合
+    if (empty($data)) {
+      return $cache;
+    }
+
+    // コード処理
+    $data = str_replace("\\U",'\\u', $data);
+    $json =  json_decode($data,JSON_UNESCAPED_SLASHES);
+
+
+    // JSONが無効な場合
+    if (empty($json)) {
+      return $cache;
+    }
+
+    $youtube_cache  = array();
+    $youtube_cache['title'] = htmlentities( $json['title'], ENT_QUOTES, 'UTF-8' );
+    $youtube_cache['video_id'] = $video_id[0];
+
+
+    $youtube_cache = base64_encode(json_encode($youtube_cache));
+
+    if(isset($attr['discover']) && $attr['discover'] == 1){
+      unset($attr['discover']);
+    }
+
+    $cachekey   = '_oembed_' . md5( $url . serialize( $attr ) );
+    // $cache変数のアップデート
+    $cache      = str_replace('src', ' data-youtube="'.$youtube_cache.'" src', $cache);
+
+    // 新しいキャッシュを保存
+    update_post_meta( get_the_ID(), $cachekey, $cache );
+
+    $MATCH_CACHE = $youtube_cache;
+  }
+
+  $json   = json_decode(base64_decode($MATCH_CACHE), true);
+
+  $youtube   = preg_replace("/data-youtube=\"(.+?)\"/", "", $cache);
+  $youtube   = htmlentities(str_replace( '=oembed','=oembed&autoplay=1&rel=0', $youtube ));
+
+  $thumb_url  = "https://i.ytimg.com/vi/{$json['video_id']}/hqdefault.jpg";
+
+  $wrap_start = '<div class="video-container">';
+  $wrap_end   = '</div>';
+
+  //タグの生成
+  $html = $wrap_start . "<div class='video-click video' data-iframe='$youtube' style='position:relative;background: url($thumb_url) no-repeat scroll center center / cover' ><div class='video-title-grad'><div class='video-title-text'>{$json['title']}</div></div><div class='video-play'></div></div>" . $wrap_end;
+
+  return apply_filters('youtube_embed_html', $html);
+
+};
+endif;
+
+//クリックしたときにiframe読み込む
+add_filter( 'wp_footer', 'youtube_embed_oembed_script' );
+if ( !function_exists( 'youtube_embed_oembed_script' ) ):
+function youtube_embed_oembed_script(){
+  ?>
+  <script>
+    (function(){
+        var f = document.querySelectorAll(".video-click");
+        for (var i = 0; i < f.length; ++i) {
+        f[i].onclick = function () {
+          var iframe = this.getAttribute("data-iframe");
+          this.parentElement.innerHTML = '<div class="video">' + iframe + '</div>';
+        }
+        }
+    })();
+  </script>
+  <?php
 }
 endif;

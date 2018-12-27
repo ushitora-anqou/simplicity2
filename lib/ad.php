@@ -161,3 +161,23 @@ function is_pagination_last_page(){
   return ( $now_page == $max_page );
 }
 endif;
+
+//[ad]ショートコードに対して広告を表示する
+if ( !function_exists( 'replace_ad_shortcode_to_advertisement' ) ):
+function replace_ad_shortcode_to_advertisement($the_content){
+  $ad_shortcode = '[ad]';
+  ob_start();//バッファリング
+  if (is_amp()) {
+    //get_template_part('ad-amp');//AMP用広告コート
+  } else {
+    get_template_part('ad');//通常ページ用広告コード
+  }
+  $ad_template = ob_get_clean();
+  $the_content = preg_replace('{^(<p>)?'.preg_quote($ad_shortcode).'(</p>)?$}m', $ad_template, $the_content);
+  //$the_content = str_replace($ad_shortcode, $ad_template, $the_content);
+  return $the_content;
+}
+endif;
+if (is_ads_ad_shortcode_enable()) {
+  add_filter('the_content', 'replace_ad_shortcode_to_advertisement');
+}

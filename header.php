@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
+<?php //Google Analytics（gtag.js）
+get_template_part('head-alalytics'); ?>
 <?php
 //////////////////////////////////
 //ウェブマスターツール用のID表示
@@ -37,11 +39,11 @@ endif; ?>
 <?php get_template_part('head-custom-field');//カスタムフィールドの挿入（カスタムフィールド名：head_custom）?>
 <?php wp_head(); ?>
 </head>
-  <body <?php body_class(); ?> itemscope itemtype="http://schema.org/WebPage">
+  <body <?php body_class(); ?> itemscope itemtype="https://schema.org/WebPage">
     <div id="container">
 
       <!-- header -->
-      <header itemscope itemtype="http://schema.org/WPHeader">
+      <header itemscope itemtype="https://schema.org/WPHeader">
         <div id="header" class="clearfix">
           <div id="header-in">
 
@@ -80,4 +82,4 @@ endif; ?>
 
           <!-- main -->
           <main itemscope itemprop="mainContentOfPage">
-            <div id="main" itemscope itemtype="http://schema.org/Blog">
+            <div id="main" itemscope itemtype="https://schema.org/Blog">

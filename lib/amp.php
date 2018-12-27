@@ -35,7 +35,7 @@ function has_amp_page(){
   return is_singular() &&
     is_amp_enable() &&
     is_amp_page_enable() &&
-    !in_category( $category_ids ) && //除外カテゴリではAMPページを生成しない
+    !in_category( explode(',', $category_ids) ) && //除外カテゴリではAMPページを生成しない
     (!function_exists('is_bbpress') || !is_bbpress());
 }
 endif;
@@ -50,7 +50,7 @@ function convert_content_for_amp($the_content){
 
 
   //iframe用のplaceholderタグ（amp-iframeの呼び出し位置エラー対策）
-  $amp_placeholder = '<amp-img layout="fill" src="'.get_template_directory_uri().'/images/transparence.png'.'" placeholder>';
+  $amp_placeholder = '<amp-img layout="fill" src="'.get_template_directory_uri().'/images/transparence.png'.'" placeholder></amp-img>';
 
 
   //noscriptタグの削除
@@ -60,6 +60,10 @@ function convert_content_for_amp($the_content){
   //fontタグの削除
   $the_content = preg_replace('/<font[^>]*?>/i', '', $the_content);
   $the_content = preg_replace('/<\/font>/i', '', $the_content);
+
+  //colタグのwidth属性削除
+  $the_content = preg_replace('/<col(.*?) width="[^"]*?"(.*?)>/i', '<col$1$2>', $the_content);
+  $the_content = preg_replace("/<col(.*?) width='[^']*?'(.*?)>/i", '<col$1$2>', $the_content);
 
   //Amazon商品リンクのhttp URLをhttpsへ
   $the_content = str_replace('http://rcm-jp.amazon.co.jp/', 'https://rcm-fe.amazon-adsystem.com/', $the_content);
@@ -265,7 +269,7 @@ function convert_content_for_amp($the_content){
   $the_content = preg_replace('/<img(.+?)\/?>/is', '<amp-img$1></amp-img>', $the_content);
 
   // Twitterをamp-twitterに置換する（埋め込みコード）
-  $pattern = '/<blockquote class="twitter-tweet".*?>.+?<a href="https:\/\/twitter.com\/.*?\/status\/(.*?)">.+?<\/blockquote>/is';
+  $pattern = '/<blockquote class="twitter-tweet".*?>.+?<a href="https:\/\/twitter.com\/.*?\/status\/([^\?"]+).*?">.+?<\/blockquote>/is';
   $append = '<p><amp-twitter width=592 height=472 layout="responsive" data-tweetid="$1"></amp-twitter></p>';
   $the_content = preg_replace($pattern, $append, $the_content);
 
@@ -279,9 +283,19 @@ function convert_content_for_amp($the_content){
   $append = '<p><amp-vine data-vineid="$1" width="592" height="592" layout="responsive"></amp-vine></p>';
   $the_content = preg_replace($pattern, $append, $the_content);
 
-  // Instagramをamp-instagramに置換する
-  $pattern = '/<blockquote class="instagram-media".+?"https:\/\/www.instagram.com\/p\/(.+?)\/".+?<\/blockquote>/is';
-  $append = '<p><amp-instagram layout="responsive" data-shortcode="$1" width="592" height="592" ></amp-instagram></p>';
+  // // Instagramをamp-instagramに置換する（旧バージョン）
+  // $pattern = '/<blockquote class="instagram-media".+?"https:\/\/www.instagram.com\/p\/(.+?)\/".+?<\/blockquote>/is';
+  // $append = '<p><amp-instagram layout="responsive" data-shortcode="$1" width="592" height="592" ></amp-instagram></p>';
+  // $the_content = preg_replace($pattern, $append, $the_content);
+
+  // Instagramをamp-instagramに置換する（新バージョン）
+  $pattern = '/<blockquote class="instagram-media".+?"https:\/\/www.instagram.com\/p\/(.+?)\/.*?".+?<\/blockquote>/is';
+  $append  = '<p><amp-instagram layout="responsive" data-shortcode="$1" width="592" height="592"></amp-instagram></p>';
+  $the_content = preg_replace($pattern, $append, $the_content);
+
+  // audioをamp-amp-audioに置換する
+  $pattern = '/<audio .+?src="([^"]+?)".+?<\/audio>/is';
+  $append = '<p><amp-audio src="$1"></amp-audio></p>';
   $the_content = preg_replace($pattern, $append, $the_content);
 
   // //YouTubeのURL埋め込み時にiframeのsrc属性のURLに余計なクエリが入るのを除去（力技;）

@@ -618,7 +618,7 @@ function theme_customize_register($wp_customize) {
   $wp_customize->add_control( 'wordpress_excerpt', array(
     'settings' => 'wordpress_excerpt',
     'label' => __( '抜粋に「メタディスクリプション」項目を利用', 'simplicity2' ),
-    'description' => is_tips_visible() ? __( '記事一覧・ブログカードのスニペットに投稿管理画面の「SEO設定」項目にある「メタディスクリプション」テキストを使用します。「メタディスクリプション」が入力されていない場合は「抜粋」が使用されます。（※双方とも未入力の場合は記事本文冒頭の抜粋文）', 'simplicity2' ) : '',
+    'description' => is_tips_visible() ? __( '記事一覧・ブログカードのスニペットに投稿管理画面の「抜粋」テキストを使用します。「抜粋」が入力されていない場合は「SEO設定」項目にある「メタディスクリプション」が使用されます。（※双方とも未入力の場合は記事本文冒頭の抜粋文）', 'simplicity2' ) : '',
     'section' => 'layout_section',
     'type' => 'checkbox',
     'priority' => 100,
@@ -1325,13 +1325,14 @@ function theme_customize_register($wp_customize) {
   $wp_customize->add_control( 'lightbox_type', array(
     'settings' => 'lightbox_type',
     'label' => __( '画像リンク拡大効果のタイプ', 'simplicity2' ),
-    'description' => is_tips_visible() ? __( 'ライトボックス（画像拡大効果）のタイプを指定します。それぞれは、jQueryライブラリ名です。詳細はリンク先を参照してください。<a href="http://nelog.jp/lightbox-jquery" target="_blank">Lightbox</a>、<a href="http://nelog.jp/lity-js" target="_blank">Lity</a>', 'simplicity2' ) : '',
+    'description' => is_tips_visible() ? __( 'ライトボックス（画像拡大効果）のタイプを指定します。それぞれは、jQueryライブラリ名です。詳細はリンク先を参照してください。<a href="http://nelog.jp/lightbox-jquery" target="_blank">Lightbox</a>、<a href="http://nelog.jp/lity-js" target="_blank">Lity</a>、<a href="https://feimosi.github.io/baguetteBox.js/" target="_blank">baguetteBox</a>', 'simplicity2' ) : '',
     'section' => 'image_section',
     'type' => 'radio',
     'choices'    => array(
       'none'     => __( '拡大効果なし', 'simplicity2' ),
       'lightbox' => __( 'Lightbox', 'simplicity2' ),
       'lity'     => __( 'Lity（軽い）', 'simplicity2' ),
+      'baguettebox'     => __( 'baguetteBox（スマホ対応）', 'simplicity2' ),
     ),
     'priority' => 50,
   ));
@@ -1353,25 +1354,6 @@ function theme_customize_register($wp_customize) {
       'shadow'    => __( 'シャドー（影）', 'simplicity2' ),
     ),
     'priority' => 60,
-  ));
-
-  //画像リンク拡大効果
-  $wp_customize->add_setting('lightbox_type', array(
-    'default' => 'none',
-    'sanitize_callback' => 'sanitize_text',
-  ));
-  $wp_customize->add_control( 'lightbox_type', array(
-    'settings' => 'lightbox_type',
-    'label' => __( '画像リンク拡大効果のタイプ', 'simplicity2' ),
-    'description' => is_tips_visible() ? __( 'ライトボックス（画像拡大効果）のタイプを指定します。それぞれは、jQueryライブラリ名です。詳細はリンク先を参照してください。<a href="http://nelog.jp/lightbox-jquery" target="_blank">Lightbox</a>、<a href="http://nelog.jp/lity-js" target="_blank">Lity</a>', 'simplicity2' ) : '',
-    'section' => 'image_section',
-    'type' => 'radio',
-    'choices'    => array(
-      'none'     => __( '拡大効果なし', 'simplicity2' ),
-      'lightbox' => __( 'Lightbox', 'simplicity2' ),
-      'lity'     => __( 'Lity（軽い）', 'simplicity2' ),
-    ),
-    'priority' => 50,
   ));
 
   //マウスホバーでAlt属性値をキャプション表示
@@ -2311,6 +2293,19 @@ function theme_customize_register($wp_customize) {
     'priority'=> 600,
   ));
 
+  //[ad]ショートコードの利用
+  $wp_customize->add_setting('ads_ad_shortcode_enable', array(
+    'sanitize_callback' => 'sanitize_check',
+  ));
+  $wp_customize->add_control( 'ads_ad_shortcode_enable', array(
+    'settings' => 'ads_ad_shortcode_enable',
+    'label' => __( '[ad]ショートコードの利用', 'simplicity2' ),
+    'description' => is_tips_visible() ? __( '本文中に[ad]と入力した箇所にウィジェットに設定した広告コードが出力されます。PC、モバイル、AMPと別々のものが表示されますので、利用の際は十分に動作確認することをおすすめします。', 'simplicity2' ) : '',
+    'section' => 'ads_section',
+    'type' => 'checkbox',
+    'priority'=> 610,
+  ));
+
   //PCトップをカスタムサイズ広告に
   $wp_customize->add_setting('custum_ad_space', array(
     'sanitize_callback' => 'sanitize_check',
@@ -2390,6 +2385,7 @@ function theme_customize_register($wp_customize) {
       'dc' => __( 'dc.js（ユーザー属性、インタレスト対応）', 'simplicity2' ),
       'analytics' => __( 'analytics.js（ユニバーサルアナリティクス）', 'simplicity2' ),
       'analytics_displayfeatures' => __( 'analytics.js（ユニバーサルアナリティクス + ユーザー属性、インタレスト対応）', 'simplicity2' ),
+      'gtag' => __( 'gtag.js（最新バージョン）', 'simplicity2' ),
     ),
     'priority' => 20,
   ));
@@ -3409,6 +3405,20 @@ function theme_customize_register($wp_customize) {
     'priority'       => 98.7,
   ));
 
+  //ブロックエディターを有効化
+  $wp_customize->add_setting('admin_block_editor_enable', array(
+    'default' => true,
+    'sanitize_callback' => 'sanitize_check',
+  ));
+  $wp_customize->add_control( 'admin_block_editor_enable', array(
+    'settings' => 'admin_block_editor_enable',
+    'label' => __( 'ブロックエディターを有効化', 'simplicity2' ),
+    'description' => is_tips_visible() ? __( 'ブロックエディター（Gutenbergエディター）を利用するか選択します。', 'simplicity2' ) : '',
+    'section' => 'admin_section',
+    'type' => 'checkbox',
+    'priority' => 30,
+  ));
+
   //ビジュアルエディターにSimplicityスタイルを適用
   $wp_customize->add_setting('admin_editor_enable', array(
     'default' => true,
@@ -3475,6 +3485,20 @@ function theme_customize_register($wp_customize) {
     'section' => 'admin_section',
     'type' => 'checkbox',
     'priority' => 400,
+  ));
+
+  //管理エディタータイトル等の文字数表示
+  $wp_customize->add_setting('admin_editor_counter_visible', array(
+    'default' => true,
+    'sanitize_callback' => 'sanitize_check',
+  ));
+  $wp_customize->add_control( 'admin_editor_counter_visible', array(
+    'settings' => 'admin_editor_counter_visible',
+    'label' => __( 'タイトル等の文字数カウンター表示', 'simplicity2' ),
+    'description' => is_tips_visible() ? __( '投稿管理画面のタイトルや、SEO設定のタイトル・ディスクリプションの文字数表示を行います。', 'simplicity2' ) : '',
+    'section' => 'admin_section',
+    'type' => 'checkbox',
+    'priority' => 450,
   ));
 
   //管理者用PV表
@@ -4335,9 +4359,11 @@ function get_lazy_load_threshold(){
 }
 
 //画像リンク拡大効果タイプの取得
+if ( !function_exists( 'get_lightbox_type' ) ):
 function get_lightbox_type(){
   return get_theme_mod( 'lightbox_type', 'none' );
 }
+endif;
 
 //Alt属性キャプション表示タイプの取得
 function get_alt_caption_type(){
@@ -4362,6 +4388,11 @@ function is_lightbox_enable(){
 //lityが有効か
 function is_lity_enable(){
   return get_lightbox_type() == 'lity';
+}
+
+//baguetteBoxが有効か
+function is_baguettebox_enable(){
+  return get_lightbox_type() == 'baguettebox';
 }
 
 //画像効果の取得
@@ -4857,6 +4888,11 @@ function is_ads_performance_visible(){
   return get_theme_mod( 'ads_performance_visible', false );
 }
 
+//[ad]ショートコードの利用
+function is_ads_ad_shortcode_enable(){
+  return get_theme_mod( 'ads_ad_shortcode_enable', false );
+}
+
 //PCトップをカスタムサイズ広告にするか
 function is_ads_custum_ad_space(){
   return get_theme_mod( 'custum_ad_space', false );
@@ -5213,6 +5249,11 @@ function get_theme_text_not_found_message(){
   return get_theme_mod( 'theme_text_not_found_message', __( '記事は見つかりませんでした。', 'simplicity2' ) );
 }
 
+//ブロックエディターの有効化
+function is_admin_block_editor_enable(){
+  return get_theme_mod( 'admin_block_editor_enable', true );
+}
+
 //ビジュアルエディターにSimplicityスタイルを適用するか
 function is_admin_editor_enable(){
   return get_theme_mod( 'admin_editor_enable', true );
@@ -5236,6 +5277,11 @@ function is_initial_media_disp_type_in_entry(){
 //記事を公開前に確認するか
 function is_confirmation_before_publish(){
   return get_theme_mod( 'confirmation_before_publish', false );
+}
+
+//管理画面のカウンター表示
+function is_admin_editor_counter_visible(){
+  return get_theme_mod( 'admin_editor_counter_visible', true );
 }
 
 //管理者用PV表示タイプの取得
@@ -5304,6 +5350,11 @@ function is_analytics_tracking_type_analytics(){
 //Analyticsトラッキングタイプがanalytics.jsか
 function is_analytics_tracking_type_analytics_with_displayfeatures(){
   return get_analytics_tracking_type() == 'analytics_displayfeatures';
+}
+
+//Analyticsトラッキングタイプがgtag.jsか
+function is_analytics_tracking_type_gtag(){
+  return get_analytics_tracking_type() == 'gtag';
 }
 
 //ユーザー属性とインタレストカテゴリに関するレポートに対応しているか
