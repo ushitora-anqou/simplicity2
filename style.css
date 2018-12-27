@@ -497,7 +497,7 @@ hr.sep {
   position: relative;
   border: none;
   float:none;
-  height:31px;
+  /* height:31px; */
 }
 
 #navi ul.sub-menu ul,
@@ -3610,4 +3610,35 @@ dl.recent-comments dd .recent-comment-content{
 
 .icon-amp-logo2::before {
   font-size: 14px;
+}
+
+/* written by anqou */
+
+.writer-profile{
+  margin:1%;
+  clear: both;
+}
+.writer-profile .eyecatch {
+  width: 18%;
+  float:left;
+  margin: 1%;
+}
+.writer-profile .profiletxt {
+  overflow:auto;
+}
+.writer-profile .name{
+  font-weight:bold;
+  padding:10px 0;
+  margin:0;
+}
+.writer-profile .link {
+  float: right;
+}
+.writer-profile .link a:after{
+  content:' >';
+}
+
+.no-hover a:hover {
+background: transparent;
+cursor: default;
 }

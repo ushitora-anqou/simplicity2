@@ -42,6 +42,7 @@
         <span class="amp-test"><span class="fa icon-amp-logo2 fa-fw"></span><a href="<?php echo get_amp_test_tool_url(get_amp_permalink()); ?>" target="_blank"><?php _e( 'テスト', 'simplicity2' ) ?></a></span>
       <?php endif ?>
 
+      <?php get_template_part('author-link-2') //投稿者リンク?>
       <?php if ( is_single() ) get_template_part('edit-link'); //編集リンク?>
 
       <?php wlw_edit_post_link(__( 'WLWで編集', 'simplicity2' ), '<span class="wlw-edit"><span class="fa fa-pencil-square-o fa-fw"></span>', '</span>'); ?>
@@ -66,6 +67,8 @@
   <?php //記事本文の表示
     the_content( get_theme_text_read_more() ); //デフォルト：続きを読む?>
   </div>
+
+  <?php get_template_part('single-author-info') ?>
 
   <footer>
     <?php if ( is_single() ) get_template_part('pager-page-links');//ページリンクのページャー?>
@@ -103,10 +106,6 @@
       <?php if (is_tag_visible()): ?>
       <span class="post-tag"><?php the_tags('<span class="fa fa-tags fa-fw"></span>','<span class="tag-separator">, </span>'); ?></span>
       <?php endif; ?>
-
-      <?php if ( is_single() ) get_template_part('author-link') //投稿者リンク?>
-
-      <?php if ( is_single() ) get_template_part('edit-link') //編集リンク?>
 
       <?php if ( is_single() ) wlw_edit_post_link(__( 'WLWで編集', 'simplicity2' ), '<span class="wlw-edit"><span class="fa fa-pencil-square-o fa-fw"></span>', '</span>'); ?>
     </p>

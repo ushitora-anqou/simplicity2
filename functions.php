@@ -1,4 +1,6 @@
 <?php
+//update_option( 'siteurl', 'http://anqou.net/poc' );
+//update_option( 'home', 'http://www.anqou.net/poc' );
 require_once(ABSPATH . 'wp-admin/includes/file.php');//WP_Filesystemの使用
 //-----------------------------------
 //Wordpressマルチ言語化の設定

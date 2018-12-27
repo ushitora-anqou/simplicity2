@@ -33,6 +33,9 @@ if ( is_list_style_large_cards() ||
         </span>
       <?php endif ?>
 
+      <?php get_template_part('author-link-2') //投稿者リンク?>
+      <?php get_template_part('edit-link') //編集リンク?>
+
     </p><!-- /.post-meta -->
     <?php get_template_part('admin-pv');//管理者のみにPV表示?>
   </header>

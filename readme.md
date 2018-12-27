@@ -1,56 +1,81 @@
 Simplicity
 ===================================
 
-Simplicity‚ÍASEOÅ“K‰»Ï‚Ý‚ÌƒVƒ“ƒvƒ‹‚ÈWordpressƒe[ƒ}‚Å‚·B
+Simplicityã¯ã€SEOæœ€é©åŒ–æ¸ˆã¿ã®ã‚·ãƒ³ãƒ—ãƒ«ãªWordpressãƒ†ãƒ¼ãƒžã§ã™ã€‚
 
-Simplicity‚ÌˆÓ–¡‚ÍA’PƒAŠÈ’PAŠÈ‘fAŽ¿‘f‚Å‚·Bü‚è‹C‚Ì‚È‚¢ƒJƒXƒ^ƒ}ƒCƒY‚Ì“y‘ä‚Æ‚È‚ê‚é‚æ‚¤‚Èƒe[ƒ}‚ð–ÚŽw‚µ‚Äì‚è‚Ü‚µ‚½B
+Simplicityã®æ„å‘³ã¯ã€å˜ç´”ã€ç°¡å˜ã€ç°¡ç´ ã€è³ªç´ ã§ã™ã€‚é£¾ã‚Šæ°—ã®ãªã„ã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚ºã®åœŸå°ã¨ãªã‚Œã‚‹ã‚ˆã†ãªãƒ†ãƒ¼ãƒžã‚’ç›®æŒ‡ã—ã¦ä½œã‚Šã¾ã—ãŸã€‚
 
-Simplicityƒe[ƒ}‚ÌÚ×‚ÍˆÈ‰º‚ÌURL‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B  
+Simplicityãƒ†ãƒ¼ãƒžã®è©³ç´°ã¯ä»¥ä¸‹ã®URLã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚
 https://wp-simplicity.com/
 
-Œ»Ý‚ÍSimplicity2‚Ì‚Ý‚ÌŠJ”­‚Æ‚È‚Á‚Ä‚¢‚Ü‚·B
+ç¾åœ¨ã¯Simplicity2ã®ã¿ã®é–‹ç™ºã¨ãªã£ã¦ã„ã¾ã™ã€‚
 
-ƒe[ƒ}ƒtƒ@ƒCƒ‹ƒJƒXƒ^ƒ}ƒCƒY
+ãƒ†ãƒ¼ãƒžãƒ•ã‚¡ã‚¤ãƒ«ã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚º
 --------------------------
-ƒe[ƒ}ƒtƒ@ƒCƒ‹‚ðƒJƒXƒ^ƒ}ƒCƒY‚·‚éê‡‚ÍA‚±‚Ìeƒe[ƒ}‚ðƒJƒXƒ^ƒ}ƒCƒY‚µ‚Ä‚µ‚Ü‚¤‚ÆAƒAƒbƒvƒf[ƒgŽž•ÒW•”•ª‚àã‘‚«‚³‚ê‚Ä‚µ‚Ü‚¢‚Ü‚·B
-‚Å‚·‚Ì‚ÅAŽqƒe[ƒ}‚ð—˜—p‚µ‚½ƒJƒXƒ^ƒ}ƒCƒY‚ð‚¨‚·‚·‚ß‚µ‚Ü‚·B  
+ãƒ†ãƒ¼ãƒžãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚ºã™ã‚‹å ´åˆã¯ã€ã“ã®è¦ªãƒ†ãƒ¼ãƒžã‚’ã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚ºã—ã¦ã—ã¾ã†ã¨ã€ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆæ™‚ç·¨é›†éƒ¨åˆ†ã‚‚ä¸Šæ›¸ãã•ã‚Œã¦ã—ã¾ã„ã¾ã™ã€‚
+ã§ã™ã®ã§ã€å­ãƒ†ãƒ¼ãƒžã‚’åˆ©ç”¨ã—ãŸã‚«ã‚¹ã‚¿ãƒžã‚¤ã‚ºã‚’ãŠã™ã™ã‚ã—ã¾ã™ã€‚
 https://wp-simplicity.com/downloads/child-theme2/
 
-ƒ‰ƒCƒZƒ“ƒX
+ãƒ©ã‚¤ã‚»ãƒ³ã‚¹
 ----------
-GNU General Public License  
+GNU General Public License
 http://www.gnu.org/licenses/gpl-2.0.html
 
-ŠJ”­ŽÒ
+é–‹ç™ºè€…
 ------
-‚í‚¢‚Ð‚çF [yhira](https://github.com/yhira) 
+ã‚ã„ã²ã‚‰ï¼š [yhira](https://github.com/yhira)
 
 THANKS
 ------
-highlight.js  
+highlight.js
 https://highlightjs.org/
 
-Lightbox  
+Lightbox
 http://lokeshdhakar.com/projects/lightbox2/
 
-Lity  
+Lity
 http://sorgalla.com/lity/
 
-Masonry  
+Masonry
 http://masonry.desandro.com/
 
-Lazy Load Plugin for jQuery  
+Lazy Load Plugin for jQuery
 https://www.appelsiini.net/projects/lazyload
 
-SlickNav  
+SlickNav
 http://slicknav.com/
 
-Holder.js  
+Holder.js
 http://holderjs.com/
 
-animatedModal.js  
+animatedModal.js
 http://joaopereirawd.github.io/animatedModal.js/
 
-Sidr  
+Sidr
 https://www.berriart.com/sidr/
 
+# Modified by Anqou
+
+[Prism](https://github.com/PrismJS/prism)
+
+> MIT LICENSE
+>
+> Copyright (c) 2012 Lea Verou
+>
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in
+> all copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+> THE SOFTWARE.
