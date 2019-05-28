@@ -921,7 +921,7 @@ function responsive_pagination($pages = '', $range = 4){
     //番号つきページ送りボタン
     for ($i=1; $i <= $pages; $i++)     {
       if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) ))       {
-        echo ($paged == $i)? '<li class="current"><a>'.$i.'</a></li>':'<li><a href="'.get_pagenum_link($i).'" class="inactive" >'.$i.'</a></li>';
+        echo ($paged == $i)? '<li class="current"><span>'.$i.'</span></li>':'<li><a href="'.get_pagenum_link($i).'" class="inactive" >'.$i.'</a></li>';
       }
     }
     //1つ進む
@@ -1600,5 +1600,17 @@ function youtube_embed_oembed_script(){
     })();
   </script>
   <?php
+}
+endif;
+
+//強制付与されるnoreferrer削除
+add_filter( 'wp_targeted_link_rel', 'wp_targeted_link_rel_custom', 10, 2 );
+if ( !function_exists( 'wp_targeted_link_rel_custom' ) ):
+function wp_targeted_link_rel_custom( $rel_value, $link_html ){
+  // if( false === strpos( $link_html, home_url() ) ){
+  //   $rel_value = 'noopener';
+  // }
+  $rel_value = str_replace(' noreferrer', '', $rel_value);
+  return $rel_value;
 }
 endif;

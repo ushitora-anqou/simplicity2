@@ -124,6 +124,12 @@ if ( !function_exists( 'fetch_pocket_count' ) ):
 function fetch_pocket_count($url) {
   if ( WP_Filesystem() ) {//WP_Filesystemの初期化
     global $wp_filesystem;//$wp_filesystemオブジェクトの呼び出し
+    $hash_url = md5($url);
+    $transient_id = 'simplicity_share_count_pocket_'.$hash_url;
+    $count = get_transient( $transient_id );
+    if ( is_numeric($count) ) {
+      return $count;
+    }
     //$query = 'http://widgets.getpocket.com/v1/button?v=1&count=horizontal&url=' . $url;
     $url = urlencode($url);
     $query = 'https://widgets.getpocket.com/v1/button?label=pocket&count=horizontal&v=1&url='.$url.'&src=' . $url;
@@ -133,8 +139,10 @@ function fetch_pocket_count($url) {
     //var_dump($result["body"]);
     // 正規表現でカウント数のところだけを抽出
     preg_match( '/<em id="cnt">([0-9.]+)<\/em>/i', $result["body"], $count );
+    $res = isset($count[1]) ? intval($count[1]) : 0;
+    set_transient( $transient_id, $res, HOUR_IN_SECONDS * 3 );
     // 共有数を表示
-    return isset($count[1]) ? intval($count[1]) : 0;
+    return $res;
   }
   return 0;
 }
@@ -159,19 +167,27 @@ endif;
 //Facebookシェア数を取得する
 if ( !function_exists( 'fetch_facebook_count' ) ):
 function fetch_facebook_count($url) {
+  if (!get_fb_access_token()) {
+    return 0;
+  }
   //URLをURLエンコード
   $encoded_url = rawurlencode( $url );
   //オプションの設定
   $args = array( 'sslverify' => is_ssl_verification_enable() );
   //Facebookにリクエストを送る
-  $response = wp_remote_get( 'https://graph.facebook.com/?id='.$encoded_url, $args );
+  $request_url = 'https://graph.facebook.com/?id='.$encoded_url.'&fields=engagement&access_token='.trim(get_fb_access_token());
+  $response = wp_remote_get( $request_url, $args );
   $res = 0;
 
   //取得に成功した場合
   if (!is_wp_error( $response ) && $response["response"]["code"] === 200) {
     $body = $response['body'];
     $json = json_decode( $body ); //ジェイソンオブジェクトに変換する
-    $res = ($json->{'share'}->{'share_count'} ? $json->{'share'}->{'share_count'} : 0);
+    $reaction_count = isset($json->{'engagement'}->{'reaction_count'}) ? $json->{'engagement'}->{'reaction_count'} : 0;
+    $comment_count = isset($json->{'engagement'}->{'comment_count'}) ? $json->{'engagement'}->{'comment_count'} : 0;
+    $share_count = isset($json->{'engagement'}->{'share_count'}) ? $json->{'engagement'}->{'share_count'} : 0;
+    $comment_plugin_count = isset($json->{'engagement'}->{'comment_plugin_count'}) ? $json->{'engagement'}->{'comment_plugin_count'} : 0;
+    $res = intval($reaction_count) + intval($comment_count) + intval($share_count) + intval($comment_plugin_count);
   }
   return $res;
 }

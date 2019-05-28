@@ -1702,18 +1702,18 @@ function theme_customize_register($wp_customize) {
     'priority' => 30,
   ));
 
-  //Google＋拡散ボタン表示
-  $wp_customize->add_setting('google_plus_btn_visible', array(
-    'default'  => true,
-    'sanitize_callback' => 'sanitize_check',
-  ));
-  $wp_customize->add_control( 'google_plus_btn_visible', array(
-    'settings' => 'google_plus_btn_visible',
-    'label' => __( 'Google＋「+1」ボタンの表示', 'simplicity2' ),
-    'section' => 'sns_section',
-    'type' => 'checkbox',
-    'priority' => 40,
-  ));
+  // //Google＋拡散ボタン表示
+  // $wp_customize->add_setting('google_plus_btn_visible', array(
+  //   'default'  => true,
+  //   'sanitize_callback' => 'sanitize_check',
+  // ));
+  // $wp_customize->add_control( 'google_plus_btn_visible', array(
+  //   'settings' => 'google_plus_btn_visible',
+  //   'label' => __( 'Google＋「+1」ボタンの表示', 'simplicity2' ),
+  //   'section' => 'sns_section',
+  //   'type' => 'checkbox',
+  //   'priority' => 40,
+  // ));
 
   //はてな拡散ボタン表示
   $wp_customize->add_setting('hatena_btn_visible', array(
@@ -1937,18 +1937,18 @@ function theme_customize_register($wp_customize) {
     'priority' => 100,
   ));
 
-  //Google＋フォローID
-  $wp_customize->add_setting('google_plus_follow_id', array(
-    'sanitize_callback' => 'sanitize_text',
-  ));
-  $wp_customize->add_control( 'google_plus_follow_id', array(
-    'settings' => 'google_plus_follow_id',
-    'label' => __( 'plus.google.com/XXXXXXX', 'simplicity2' ),
-    'description' => is_tips_visible() ? __( 'Google+ページURLのXXXXXXX部分を入力してください。', 'simplicity2' ) : '',
-    'section' => 'sns_section',
-    'type' => 'text',
-    'priority' => 110,
-  ));
+  // //Google＋フォローID
+  // $wp_customize->add_setting('google_plus_follow_id', array(
+  //   'sanitize_callback' => 'sanitize_text',
+  // ));
+  // $wp_customize->add_control( 'google_plus_follow_id', array(
+  //   'settings' => 'google_plus_follow_id',
+  //   'label' => __( 'plus.google.com/XXXXXXX', 'simplicity2' ),
+  //   'description' => is_tips_visible() ? __( 'Google+ページURLのXXXXXXX部分を入力してください。', 'simplicity2' ) : '',
+  //   'section' => 'sns_section',
+  //   'type' => 'text',
+  //   'priority' => 110,
+  // ));
 
   //はてブフォローID
   $wp_customize->add_setting('hatebu_follow_id', array(
@@ -2127,6 +2127,19 @@ function theme_customize_register($wp_customize) {
     'section' => 'sns_section',
     'type' => 'checkbox',
     'priority' => 135,
+  ));
+
+  //Facebookアクセストークン
+  $wp_customize->add_setting('fb_access_token', array(
+    'sanitize_callback' => 'sanitize_text',
+  ));
+  $wp_customize->add_control( 'fb_access_token', array(
+    'settings' => 'fb_access_token',
+    'label' => __( 'Facebookアクセストークン', 'simplicity2' ) ,
+    'description' => is_tips_visible() ? __( 'Facebookでシェア数を取得する際に必要なアクセストークンを入力してください。（※要Facebookユーザー登録）', 'simplicity2' ) : '',
+    'section' => 'sns_section',
+    'type' => 'text',
+    'priority' => 139,
   ));
 
   //fb:admins
@@ -4596,7 +4609,7 @@ function is_facebook_btn_visible(){
 
 //Google＋ボタンを表示するかどうか
 function is_google_plus_btn_visible(){
-  return get_theme_mod( 'google_plus_btn_visible', true );
+  return false;//get_theme_mod( 'google_plus_btn_visible', true );
 }
 
 //はてなボタンを表示するかどうか
@@ -4789,6 +4802,11 @@ function get_twitter_card_type(){
 //FacebookOGPタグを挿入するか
 function is_facebook_ogp_enable(){
   return get_theme_mod( 'facebook_ogp_enable', true );
+}
+
+//Facebookアクセストークンを取得
+function get_fb_access_token(){
+  return get_theme_mod( 'fb_access_token', null );
 }
 
 //fb:adminsを取得
